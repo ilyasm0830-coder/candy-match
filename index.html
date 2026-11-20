@@ -141,7 +141,7 @@ const hs=async p=>{try{const b=await crypto.subtle.digest('SHA-256',new TextEnco
 function loadS(d){S={st:[],snd:1,vib:1,coins:0,ach:{},gift:'',...(d||lj(KEY,{}))}}
 function home(){$('pfb').textContent=P?P.av+' '+P.n:'👤 Login / Sign up';bg(0);show('wel')}
 function enter(u,m,d){P=u;KEY='cma_p_'+(U?U.uid:u.n);loadS(d);sndBtn();home();if(m){$('mb').innerHTML='<div class="big">'+u.av+'</div><h1>'+m+'</h1><div>'+esc(u.n)+'</div><button id="pl">▶ Play now</button>';$('md').classList.add('on');$('pl').onclick=()=>{$('md').classList.remove('on');mapScr()}}}
-const AM=c=>({'auth/email-already-in-use':'That nickname is already taken','auth/invalid-credential':'Wrong nickname or PIN','auth/wrong-password':'Wrong nickname or PIN','auth/user-not-found':'Wrong nickname or PIN','auth/too-many-requests':'Too many tries. Please wait a bit.','auth/network-request-failed':'No internet connection'}[c]||'Something went wrong. Try again.');
+const AM=c=>({'auth/email-already-in-use':'That nickname is already taken','auth/invalid-credential':'Wrong nickname or PIN','auth/wrong-password':'Wrong nickname or PIN','auth/user-not-found':'Wrong nickname or PIN','auth/too-many-requests':'Too many tries. Please wait a bit.','auth/network-request-failed':'No internet connection'}[c]||('Error: '+c));
 const em=n=>n.toLowerCase()+'@candymatch.app',pw=p=>p+'candy';
 async function pull(u){try{const d=await getDoc(doc(db,'players',u.uid));return d.exists()?d.data():null}catch(e){return null}}
 function cloud(){if(!U||!P)return;clearTimeout(tm);tm=setTimeout(()=>{setDoc(doc(db,'players',U.uid),{n:P.n,av:P.av,data:S,t:Date.now()},{merge:true}).catch(()=>{})},1200)}
@@ -160,7 +160,7 @@ function authScr(m){const b=$('ab');$('tl').classList.toggle('on',m!='s');$('ts'
   er('Please wait…');au=1;
   try{if(m=='s'){const c=await createUserWithEmailAndPassword(auth,em(n),pw(p));U=c.user;await setDoc(doc(db,'players',U.uid),{n,av,data:{},t:Date.now()});enter({n,av},'Account created! 🎉',{})}
   else{const c=await signInWithEmailAndPassword(auth,em(n),pw(p));U=c.user;const d=await pull(U);enter({n:d?d.n:n,av:d?d.av:'🐻'},'Welcome back!',d&&d.data)}}
-  catch(e){er(AM(e.code))}au=0};
+  catch(e){console.error(e);er(AM(e.code||e.message))}au=0};
  $('go').onclick=sub;b.querySelectorAll('input').forEach(i=>i.onkeydown=e=>{if(e.key=='Enter')sub()});show('au')}
 function profScr(){$('pb').innerHTML='<div class="big">'+P.av+'</div><h1>'+esc(P.n)+'</h1><div>⭐ '+S.st.reduce((a,b)=>a+(b||0),0)+' · ✅ '+S.st.filter(x=>x>0).length+'/50 · 🪙 '+S.coins+' · 🏆 '+Object.keys(S.ach).length+'/5</div><button id="lo">Logout</button><button class="g" id="b2">⬅ Back</button><small>Your progress is saved online ☁️</small>';$('lo').onclick=async()=>{await signOut(auth);U=null;P=null;KEY='cma';loadS();sndBtn();home();authScr('l')};$('b2').onclick=home;show('pr')}
 $('pfb').onclick=()=>P?profScr():authScr('l');$('tl').onclick=()=>authScr('l');$('ts').onclick=()=>authScr('s');$('ba').onclick=home;

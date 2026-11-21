@@ -1,6 +1,3 @@
-const V='cma-v1',CORE=['./','index.html','game.html','privacy.html','manifest.webmanifest','icon-192.png','icon-512.png'];
-self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!=V).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
-self.addEventListener('fetch',e=>{const r=e.request;if(r.method!='GET')return;const u=new URL(r.url);
- if(u.origin!=location.origin&&u.hostname!='www.gstatic.com')return;
- e.respondWith(caches.match(r).then(h=>{const n=fetch(r).then(res=>{if(res&&res.status==200){const cp=res.clone();caches.open(V).then(c=>c.put(r,cp))}return res}).catch(()=>h);return h||n}))});
+// Cleanup worker: removes the old offline cache that was blocking the game.
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',e=>e.waitUntil((async()=>{for(const k of await caches.keys())await caches.delete(k);await self.registration.unregister()})()));

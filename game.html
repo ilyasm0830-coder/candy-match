@@ -171,4 +171,4 @@ $('pv').onclick=()=>{W=Math.max(0,W-1);mapScr()};$('nxw').onclick=()=>{W=Math.mi
 const pop=h=>{$('mb').innerHTML=h+'<button id="ok">OK</button>';$('md').classList.add('on');$('ok').onclick=()=>$('md').classList.remove('on')};
 $('gift').onclick=()=>{const d=new Date().toDateString();if(S.gift==d)pop('<h1>🎁</h1><div>You already claimed today’s gift. Come back tomorrow!</div>');else{S.gift=d;S.coins+=50;sv();snd(700,.3);pop('<h1>🎁 Daily Gift!</h1><div>+50 🪙 coins</div>')}};
 $('bj').onclick=()=>pop('<h1>🏆 Badges</h1><div class="bl">'+Object.entries(AC).map(([k,v])=>'<div class="'+(S.ach[k]?'':'lk')+'">'+v[0]+' '+v[1]+'</div>').join('')+'</div>');
-</script><script>if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))</script></body></html>
+</script></body></html>

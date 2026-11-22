@@ -35,6 +35,7 @@ html{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}body{touch
 .cf{position:fixed;top:-20px;width:10px;height:14px;z-index:6;animation:fall 2.6s linear forwards}@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 .bl{display:flex;flex-direction:column;gap:6px;text-align:left;font-size:17px}.bl .lk{opacity:.35;filter:grayscale(1)}#cn,#wn{font-weight:800}
 .card{width:100%;box-sizing:border-box;background:var(--card);border-radius:28px;padding:22px 18px;box-shadow:0 10px 30px #0003;display:flex;flex-direction:column;align-items:center;gap:12px}.lg2{font-size:56px;line-height:1}.sub{margin:0;font-size:14px;opacity:.8}.seg{display:flex;background:var(--cell);border-radius:16px;padding:4px;width:100%;box-sizing:border-box}.seg button{flex:1;background:none;color:var(--ink);box-shadow:none;padding:8px;font-size:17px}.seg button.on{background:var(--acc);color:#fff}.or{opacity:.6;font-size:14px}.fl{width:min(300px,100%);text-align:left;font-size:14px;font-weight:800;display:flex;flex-direction:column;gap:4px}.fl .in{width:100%;box-sizing:border-box;text-align:left}.pw{position:relative}.pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);padding:4px 8px;font-size:16px;box-shadow:none;background:none}
+.c.h{visibility:hidden}.c.j1{background:#ff9bd0cc;box-shadow:inset 0 0 0 3px #ff4fa0}.c.j2{background:#c98bffdd;box-shadow:inset 0 0 0 4px #7a1fd1}
 @media (prefers-reduced-motion:reduce){.bear,.c.hint{animation:none}}
 </style></head><body><div id="app">
 
@@ -60,11 +61,12 @@ import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut
 import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 const fb=initializeApp({apiKey:"AIzaSyCxOhqQ6I6Ggr-IVpI0mOK552D4744Rr20",authDomain:"candy-match-adventure-79c48.firebaseapp.com",projectId:"candy-match-adventure-79c48",storageBucket:"candy-match-adventure-79c48.firebasestorage.app",messagingSenderId:"1069383336699",appId:"1:1069383336699:web:6c7b1e7e820cf125cfa65e"});
 const auth=getAuth(fb),db=getFirestore(fb);
-const N=7,E=['🍓','🍋','🍇','🍬','🍪'],$=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const N=7,E=['🍓','🍋','🍇','🍬','🍪','🍩',,,,'🎁'],$=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
 let S={st:[],snd:1,vib:1,coins:0,ach:{},gift:''};try{S=Object.assign(S,JSON.parse(localStorage.getItem('cma')||'{}'))}catch(e){}
 let KEY='cma',P=null,U=null,tm=0,au=0;const sv=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}cloud()};
 let B,L=0,sc=0,mv=0,busy=0,sel=null,ht=0,ham=0,hamOn=0,ac,cells=[],st=null;
-const tgt=i=>500+i*55,mvs=i=>Math.max(15,22-(i/8|0))+(i>=40?4:0),K=()=>10+(L-40);let W=0,col=0;
+const MK=[['XXXXXXX','XXXXXXX','XXXXXXX','XXXXXXX','XXXXXXX','XXXXXXX','XXXXXXX'],['.XXXXX.','XXXXXXX','XXXXXXX','XXXXXXX','XXXXXXX','XXXXXXX','.XXXXX.'],['..XXX..','..XXX..','XXXXXXX','XXXXXXX','XXXXXXX','..XXX..','..XXX..'],['...X...','..XXX..','.XXXXX.','XXXXXXX','.XXXXX.','..XXX..','...X...'],['XXXXXXX','XXXXXXX','XX...XX','XX...XX','XX...XX','XXXXXXX','XXXXXXX'],['XXX.XXX','XXX.XXX','XXX.XXX','XXXXXXX','XXXXXXX','XXXXXXX','XXXXXXX'],['.XX.XX.','XXXXXXX','XXXXXXX','XXXXXXX','.XXXXX.','..XXX..','...X...'],['XXXXXXX','.XXXXX.','..XXX..','...X...','..XXX..','.XXXXX.','XXXXXXX']];
+let W=0,col=0,ing=0,G,H,J,TM=0,KC=5;
 const AC={w:['🥇','First Win'],s3:['🌟','3 Stars Master'],cb:['💥','Combo King'],rb:['🌈','Rainbow Maker'],gc:['🏆','Grand Challenger (41–50)']};
 function ach(id){if(S.ach[id])return;S.ach[id]=1;sv();snd(900,.3);say('Badge unlocked: '+AC[id][0]+' '+AC[id][1])}
 const TH=[['🍭','Lollipop Land'],['🌈','Rainbow Road'],['⭐','Star Sky'],['🍩','Donut Town'],['🧁','Cupcake Hill'],['☁️','Cloud Castle'],['❄️','Snow Cream'],['🌸','Blossom Garden'],['🎈','Balloon Fair'],['🍫','Choco Cave']];
@@ -79,40 +81,54 @@ function sndBtn(){['snd1','snd2'].forEach(i=>$(i).textContent=(S.snd?'🔊':'�
 function tog(){S.snd=S.snd?0:1;sv();sndBtn();snd(600)}
 function togv(){S.vib=S.vib?0:1;sv();sndBtn();if(S.vib&&navigator.vibrate)navigator.vibrate(60)}
 function mapScr(){bg(W*10);$('wn').textContent='World '+(W+1);$('cn').textContent='🪙 '+S.coins;const mp=$('mp');mp.innerHTML='';for(let i=W*10;i<W*10+10;i++){const b=document.createElement('button'),s=S.st[i]||0;b.innerHTML=(i+1)+(i>=40?'🎯':'')+'<small>'+(s?'⭐'.repeat(s):'·')+'</small>';b.disabled=i>0&&!(S.st[i-1]>0);b.onclick=()=>start(i);mp.appendChild(b)}show('map')}
-function best(){const k=[0,0,0,0,0];B.flat().forEach(x=>{if(x.t>=0)k[x.t]++});return k.indexOf(Math.max(...k))}
+function best(){const k=Array(10).fill(0);B.flat().forEach(x=>{if(x.t>=0&&x.t<9)k[x.t]++});return k.indexOf(Math.max(...k))}
 function find(pref=[]){const m=new Set,sp=[];
  for(let d=0;d<2;d++){const g=(a,b)=>d?B[b][a]:B[a][b];
-  for(let i=0;i<N;i++){let j=0;while(j<N){const t=g(i,j).t;let k=j+1;while(k<N&&t>=0&&g(i,k).t==t)k++;
+  for(let i=0;i<N;i++){let j=0;while(j<N){const t0=g(i,j).t,t=t0>5?-1:t0;let k=j+1;while(k<N&&t>=0&&g(i,k).t==t)k++;
    if(t>=0&&k-j>=3){const ks=[];for(let x=j;x<k;x++){const p=d?x+','+i:i+','+x;m.add(p);ks.push(p)}
     if(k-j>=4){const p=ks.find(q=>pref.includes(q))||ks[1];sp.push({p,s:k-j>=5?'b':'r'})}}
    j=k}}}
  return{m,sp}}
-function hint(){for(let r=0;r<N;r++)for(let c=0;c<N;c++)for(const[dr,dc]of[[0,1],[1,0]]){const r2=r+dr,c2=c+dc;if(r2>=N||c2>=N)continue;const a=B[r][c],b=B[r2][c2];if(a.s||b.s)return[[r,c],[r2,c2]];B[r][c]=b;B[r2][c2]=a;const ok=find().m.size;B[r][c]=a;B[r2][c2]=b;if(ok)return[[r,c],[r2,c2]]}return null}
-function init(){do{B=Array.from({length:N},()=>Array.from({length:N},()=>({t:Math.random()*5|0})))}while(find().m.size||!hint())}
-function render(){const bd=$('bd');bd.innerHTML='';cells=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=B[r][c],d=document.createElement('div');d.className='c'+(x.n?' n':'')+(sel&&sel[0]==r&&sel[1]==c?' sel':'');d.innerHTML=x.s=='b'?'🌈':E[x.t]+(x.s?'<i>🚀</i>':'');d.dataset.r=r;d.dataset.c=c;delete x.n;bd.appendChild(d);cells.push(d)}}
-function upd(){$('sc').textContent=sc;$('mv').textContent=mv;$('lv').textContent='Level '+(L+1);$('tg').textContent='Target: '+tgt(L)+(L>=40?'  '+E[L%5]+' '+Math.min(col,K())+'/'+K():'');$('pf').style.width=Math.min(100,sc/tgt(L)*100)+'%';$('ham').textContent='🔨 '+ham}
+function hint(){for(let r=0;r<N;r++)for(let c=0;c<N;c++)for(const[dr,dc]of[[0,1],[1,0]]){const r2=r+dr,c2=c+dc;if(r2>=N||c2>=N)continue;const a=B[r][c],b=B[r2][c2];if(a.t==-9||b.t==-9)continue;if(a.s||b.s)return[[r,c],[r2,c2]];B[r][c]=b;B[r2][c2]=a;const ok=find().m.size;B[r][c]=a;B[r2][c2]=b;if(ok)return[[r,c],[r2,c2]]}return null}
+const onB=()=>B.flat().filter(x=>x&&x.t==9).length,spawn=()=>({t:(G.k=='ing'&&onB()+ing<G.n&&Math.random()<.1)?9:Math.random()*KC|0,n:1}),jl=()=>J.flat().reduce((a,b)=>a+b,0);
+function init(i){const d=i/49,k=i<2?0:i%5,m=MK[i<2?0:(i*5+3)%8];KC=i<12?5:6;
+ G=k==2?{k:'col',t:i%KC,n:12+Math.round(d*18)}:k==3?{k:'ing',n:2+Math.round(d*4)}:k==1||k==4?{k:'jelly',x:k==4?2:1}:{k:'score',t:600+i*70};
+ G.m=28-Math.round(d*10)+(G.k=='jelly'?5:0);
+ H=m.map(row=>[...row].map(ch=>ch!='X'));const rj=2+(d*3|0);
+ J=H.map((row,r)=>row.map(h=>!h&&G.k=='jelly'&&r>=N-rj-1?G.x:0));G.j0=jl();
+ do{B=H.map(row=>row.map(h=>h?{t:-9}:{t:Math.random()*KC|0}));
+  if(G.k=='ing')[1,5].forEach(c=>{const r=H.findIndex(row=>!row[c]);if(r>=0)B[r][c]={t:9}})}while(find().m.size||!hint())}
+function shuf(){B.forEach(row=>row.forEach(x=>{if(x.t>=0&&x.t<9&&!x.s)x.t=Math.random()*KC|0}))}
+function drop(){let g=1;while(g){g=0;
+ for(let c=0;c<N;c++){const ar=[];for(let r=0;r<N;r++)if(!H[r][c])ar.push(r);const ex=ar.map(r=>B[r][c]).filter(x=>x),out=[...Array.from({length:ar.length-ex.length},spawn),...ex];ar.forEach((r,i)=>{if(B[r][c]!==out[i])out[i].n=1;B[r][c]=out[i]})}
+ for(let c=0;c<N;c++){let r=N-1;while(r>=0&&H[r][c])r--;if(r>=0&&B[r][c].t==9){B[r][c]=null;ing++;g=1}}}}
+const met=()=>G.k=='score'?sc>=G.t:G.k=='col'?col>=G.n:G.k=='ing'?ing>=G.n:jl()==0;
+const gtxt=()=>G.k=='score'?'Reach '+G.t+' points':G.k=='col'?'Collect '+G.n+' '+E[G.t]:G.k=='ing'?'Bring down '+G.n+' 🎁':'Clear all the jelly 🟣';
+function render(){const bd=$('bd');bd.innerHTML='';cells=[];for(let r=0;r<N;r++)for(let c=0;c<N;c++){const x=B[r][c],d=document.createElement('div'),h=x.t==-9;d.className='c'+(h?' h':'')+(x.n?' n':'')+(sel&&sel[0]==r&&sel[1]==c?' sel':'')+(J[r][c]?' j'+J[r][c]:'');d.innerHTML=h?'':x.s=='b'?'🌈':E[x.t]+(x.s?'<i>🚀</i>':'');d.dataset.r=r;d.dataset.c=c;delete x.n;bd.appendChild(d);cells.push(d)}}
+function upd(){$('sc').textContent=sc;$('mv').textContent=mv;$('lv').textContent='Level '+(L+1);
+ $('tg').textContent=G.k=='score'?'Target: '+G.t:G.k=='col'?E[G.t]+' '+Math.min(col,G.n)+'/'+G.n:G.k=='ing'?'🎁 '+Math.min(ing,G.n)+'/'+G.n:'🟣 left: '+jl();
+ const p=G.k=='score'?sc/G.t:G.k=='col'?col/G.n:G.k=='ing'?ing/G.n:1-jl()/G.j0;$('pf').style.width=Math.min(100,p*100)+'%';$('ham').textContent='🔨 '+ham}
 function say(t){$('say').textContent='🐻 '+t}
 function clearHint(){clearTimeout(ht);cells.forEach(c=>c.classList.remove('hint'))}
 function arm(){clearTimeout(ht);ht=setTimeout(()=>{const h=hint();if(h&&!busy){h.forEach(([r,c])=>cells[r*N+c].classList.add('hint'));say('Try swapping these!')}},6000)}
-function start(i){L=i;W=i/10|0;sc=0;col=0;mv=mvs(i);ham=2;hamOn=0;sel=null;busy=0;bg(i);init();show('game');render();upd();arm();say(TH[i%10][1]+(i>=40?' · Challenge: collect '+E[i%5]+'!':' · 4 candies = 🚀, 5 = 🌈'))}
+function start(i){L=i;W=i/10|0;sc=0;col=0;ing=0;ham=2;hamOn=0;sel=null;busy=0;bg(i);init(i);mv=TM=G.m;show('game');render();upd();arm();say(TH[i%10][1]+' · '+gtxt())}
 async function cascade(pref,ex){let combo=0;
  while(1){const f=find(pref);ex.forEach(k=>f.m.add(k));ex=[];pref=[];const m=f.m;if(!m.size)break;combo++;
   const q=[...m],add=k=>{if(!m.has(k)){m.add(k);q.push(k)}};
   while(q.length){const[r,c]=q.pop().split(',').map(Number),x=B[r][c];if(!x)continue;
    if(x.s=='r')for(let i=0;i<N;i++){add(r+','+i);add(i+','+c)}
    if(x.s=='b'){const t=x.g!==undefined?x.g:best();for(let i=0;i<N;i++)for(let j=0;j<N;j++)if(t==-2||B[i][j].t==t)add(i+','+j)}}
-  f.sp.forEach(s=>m.delete(s.p));
+  f.sp.forEach(s=>m.delete(s.p));[...m].forEach(k=>{const[r,c]=k.split(',').map(Number);if(H[r][c]||B[r][c].t==9)m.delete(k)});
   sc+=m.size*10*combo;snd(380+combo*90);if(S.vib&&navigator.vibrate)navigator.vibrate(25);if(f.sp.some(s=>s.s=='b'))ach('rb');upd();
   if(combo>1)say(combo>2?'Combo Blast! 💥':'Nice combo!');if(combo>2)ach('cb');
   m.forEach(k=>{const[r,c]=k.split(',').map(Number);cells[r*N+c].classList.add('clr')});
   await sleep(210);
-  m.forEach(k=>{const[r,c]=k.split(',').map(Number);if(L>=40&&B[r][c].t==L%5)col++;B[r][c]=null});
-  f.sp.forEach(s=>{const[r,c]=s.p.split(',').map(Number),o=B[r][c];B[r][c]=s.s=='b'?{t:-1,s:'b'}:{t:o.t,s:'r'}});
-  for(let c=0;c<N;c++){let w=N-1;for(let r=N-1;r>=0;r--)if(B[r][c]){const x=B[r][c];B[r][c]=null;B[w][c]=x;if(w!=r)x.n=1;w--}for(let r=w;r>=0;r--)B[r][c]={t:Math.random()*5|0,n:1}}
+  m.forEach(k=>{const[r,c]=k.split(',').map(Number);if(G.k=='col'&&B[r][c].t==G.t)col++;if(J[r][c])J[r][c]--;B[r][c]=null});
+  f.sp.forEach(s=>{const[r,c]=s.p.split(',').map(Number),o=B[r][c];if(J[r][c])J[r][c]--;B[r][c]=s.s=='b'?{t:-1,s:'b'}:{t:o.t,s:'r'}});
+  drop();
   render();await sleep(270)}}
-async function post(){if(!hint()){init();render();say('No moves left. Candies shuffled! 🔀')}
- busy=0;upd();if(mv<=0)return end();arm()}
-async function act(r,c,r2,c2){if(busy||mv<=0||r2<0||c2<0||r2>=N||c2>=N)return;busy=1;clearHint();sel=null;
+async function post(){busy=0;upd();if(met()||mv<=0)return end();if(!hint()){let n=0;do{shuf();n++}while((find().m.size||!hint())&&n<80);render();say('No moves left. Candies shuffled! 🔀')}arm()}
+async function act(r,c,r2,c2){if(busy||mv<=0||r2<0||c2<0||r2>=N||c2>=N||B[r][c].t==-9||B[r2][c2].t==-9)return;busy=1;clearHint();sel=null;
  const A=B[r][c],X=B[r2][c2];B[r][c]=X;B[r2][c2]=A;const pa=r+','+c,pb=r2+','+c2,ex=[];
  if(A.s=='b'){A.g=X.t<0?-2:X.t;ex.push(pb)}else if(A.s=='r')ex.push(pb);
  if(X.s=='b'){X.g=A.t<0?-2:A.t;ex.push(pa)}else if(X.s=='r')ex.push(pa);
@@ -127,9 +143,9 @@ window.onpointerup=e=>{if(!st)return;const s=st;st=null;if(busy||!$('game').clas
  const dx=e.clientX-s.x,dy=e.clientY-s.y;
  if(Math.abs(dx)>18||Math.abs(dy)>18){const h=Math.abs(dx)>Math.abs(dy);act(s.r,s.c,s.r+(h?0:Math.sign(dy)),s.c+(h?Math.sign(dx):0))}else tap(s.r,s.c)};
 function conf(){const k=['#ff3d94','#ffb300','#35c2ff','#7be04a','#a35cff'];for(let i=0;i<50;i++){const d=document.createElement('b');d.className='cf';d.style.left=Math.random()*100+'vw';d.style.background=k[i%5];d.style.animationDelay=Math.random()*.8+'s';document.body.appendChild(d);setTimeout(()=>d.remove(),3600)}}
-function end(){const t=tgt(L),win=sc>=t&&(L<40||col>=K()),s=win?(sc>=t*1.8?3:sc>=t*1.4?2:1):0,mb=$('mb');
+function end(){const win=met(),r=mv/TM,s=win?(r>.4?3:r>.2?2:1):0,mb=$('mb');
  const rw=win?s*10+(L>=40&&!S.st[L]?100:0):0;if(win){if(s>(S.st[L]||0))S.st[L]=s;S.coins+=rw;ach('w');if(s==3)ach('s3');if(L>=40)ach('gc');sv();conf();snd(784,.4)}
- mb.innerHTML=win?'<h1>Amazing! 🎉</h1><div class="stars">'+'⭐'.repeat(s)+'</div><div>Score: '+sc+' · 🪙 +'+rw+'</div>'+(L<49?'<button id="nx">Next level</button>':'<div>All levels complete! 🏆</div>')+'<button class="g" id="mp2">Map</button>':'<h1>Almost there! 🐻</h1><div>Score: '+sc+' / '+t+'</div><button id="rt">Try again</button><button class="g" id="mp2">Map</button>';
+ mb.innerHTML=win?'<h1>Amazing! 🎉</h1><div class="stars">'+'⭐'.repeat(s)+'</div><div>Score: '+sc+' · 🪙 +'+rw+'</div>'+(L<49?'<button id="nx">Next level</button>':'<div>All levels complete! 🏆</div>')+'<button class="g" id="mp2">Map</button>':'<h1>Almost there! 🐻</h1><div>'+gtxt()+'</div><button id="rt">Try again</button><button class="g" id="mp2">Map</button>';
  $('md').classList.add('on');
  const b=(i,f)=>{const e=$(i);if(e)e.onclick=()=>{$('md').classList.remove('on');f()}};
  b('nx',()=>start(L+1));b('rt',()=>start(L));b('mp2',mapScr)}

@@ -64,12 +64,22 @@ html{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}body{touch
 #au #go{background:linear-gradient(180deg,#ffd54a,#ffb400);color:#2a170b;box-shadow:0 5px 0 #b07800;letter-spacing:1px}
 #au .g{background:#2a170b;color:#ffe0b0;box-shadow:0 4px 0 #0006}#au .lk,#au .sub,#au .fn,#au .or{color:#ffe0b0}
 #au small{color:#d9b98f;font-size:12px;text-align:left;width:min(300px,100%)}#au .av button{padding:4px 8px}
+#wel{position:relative;min-height:84vh;justify-content:center;gap:10px;color:#5a1f6e;overflow:hidden}
+.fx{position:absolute;font-size:34px;opacity:.85;animation:fy 4s ease-in-out infinite alternate;pointer-events:none}.f1{left:6%;top:6%}.f2{right:8%;top:10%;animation-delay:.6s}.f3{left:8%;top:48%;animation-delay:1.2s}.f4{right:7%;top:52%;animation-delay:.3s}.f5{left:22%;top:18%;animation-delay:1.8s}.f6{right:20%;top:28%;animation-delay:.9s}@keyframes fy{to{transform:translateY(-14px) rotate(8deg)}}
+.wt{margin:0;line-height:.9;font-size:62px;text-align:center;letter-spacing:1px;-webkit-text-stroke:3px #fff;paint-order:stroke fill}.wt span{display:block}.wt span:first-child{color:#ffd23f;text-shadow:0 6px 0 #d98a00}.wt span:last-child{color:#ff3d94;text-shadow:0 6px 0 #a3135f}
+.rb{background:linear-gradient(135deg,#a35cff,#4aa8ff);color:#fff;font-weight:800;letter-spacing:4px;padding:4px 22px;border-radius:14px;font-size:14px;box-shadow:0 4px 0 #5b2fa0}
+.mas{display:flex;flex-direction:column;align-items:center;gap:10px}.bl{background:#fff;color:#6a2a8e;font-weight:800;padding:6px 16px;border-radius:16px;position:relative;box-shadow:0 4px 12px #0002}.bl:after{content:"";position:absolute;left:50%;bottom:-8px;margin-left:-8px;border:8px solid transparent;border-bottom:0;border-top-color:#fff}#wel .bear{font-size:92px}
+#play{font-size:28px;padding:14px 58px;background:linear-gradient(180deg,#ff7ab8,#ff2d87);box-shadow:0 7px 0 #b0206a,0 0 28px #ff3d9488;animation:pg 1.4s ease-in-out infinite alternate}@keyframes pg{to{transform:scale(1.05)}}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:340px;margin-top:4px}#wel .g{background:#fff;color:#6a2a8e;box-shadow:0 4px 0 #d8b6ee;font-size:15px;padding:10px 8px}
+@media (prefers-reduced-motion:reduce){.fx,#play{animation:none}}
 @media (prefers-reduced-motion:reduce){.bear,.c.hint{animation:none}}
 </style></head><body><div id="app">
 
-<div id="wel" class="scr on"><div class="logo">🍬</div><h1>Candy Match Adventure</h1><div class="bear">🐻</div>
-<button id="play">▶ Play</button><button class="g" id="pfb">👤 Login / Sign up</button><button class="g" id="lbb">📊 Leaderboard</button><button class="g" id="gift">🎁 Daily Gift</button><div class="row"><button class="g" id="snd1">🔊 Sound</button><button class="g" id="vb1">📳</button><button class="g" id="bj">🏆</button></div></div>
-
+<div id="wel" class="scr on"><span class="fx f1">🍭</span><span class="fx f2">🍬</span><span class="fx f3">🍩</span><span class="fx f4">🍓</span><span class="fx f5">⭐</span><span class="fx f6">🌈</span>
+<h1 class="wt"><span>Candy</span><span>Match</span></h1><div class="rb">ADVENTURE</div>
+<div class="mas"><div class="bl">Ready to play?</div><div class="bear">🐻</div></div>
+<button id="play">▶ PLAY</button>
+<div class="mg"><button class="g" id="pfb">👤 Login / Sign up</button><button class="g" id="lbb">📊 Leaderboard</button><button class="g" id="gift">🎁 Daily Gift</button><button class="g" id="bj">🏆 Badges</button><button class="g" id="snd1">🔊 Sound</button><button class="g" id="vb1">📳 Vibration</button></div></div>
 <div id="au" class="scr"><div class="card dk"><h1 class="ttl2"><span>CANDY</span><span>MATCH</span></h1><p class="sub" id="asub"></p><div class="seg"><button id="tl">Login</button><button id="ts">Create Account</button></div><div id="ab" class="fc"></div><div class="or">or</div><button class="g" id="gs">Play as guest</button><button class="lk" id="ba">← Back to home</button><p class="fn">🔒 Your email is used only to sign you in. We never share it.</p></div></div>
 <div id="pr" class="scr"><div id="pb" class="fc"></div></div>
 <div id="lb" class="scr"><h1>🏆 Leaderboard</h1><div id="lbs" class="fc"></div><div id="lbl"></div><button id="lbr">↻ Refresh</button><button class="g" id="lbk">⬅ Back</button></div>
@@ -105,7 +115,7 @@ u=s=>'url("data:image/svg+xml,'+encodeURIComponent(s)+'")',s=document.body.style
 s.background=u(d)+','+u(hv)+' bottom/100% 110px no-repeat,linear-gradient(160deg,'+a+','+b+')';s.backgroundAttachment='fixed'}
 function snd(f,d=.12){if(!S.snd)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;o.type='triangle';g.gain.value=.15;g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+d);o.connect(g);g.connect(ac.destination);o.start();o.stop(ac.currentTime+d)}catch(e){}}
 function show(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggle('on',e.id==id))}
-function sndBtn(){['snd1','snd2'].forEach(i=>$(i).textContent=(S.snd?'🔊':'🔇')+(i=='snd1'?' Sound':''));['vb1','vb2'].forEach(i=>$(i).textContent=S.vib?'📳':'📴')}
+function sndBtn(){['snd1','snd2'].forEach(i=>$(i).textContent=(S.snd?'🔊':'🔇')+(i=='snd1'?' Sound':''));['vb1','vb2'].forEach(i=>$(i).textContent=(S.vib?'📳':'📴')+(i=='vb1'?' Vibration':''))}
 function tog(){S.snd=S.snd?0:1;sv();sndBtn();snd(600)}
 function togv(){S.vib=S.vib?0:1;sv();sndBtn();if(S.vib&&navigator.vibrate)navigator.vibrate(60)}
 function mapScr(){bg(0);$('cn').textContent='🪙 '+S.coins;
@@ -197,7 +207,8 @@ $('snd1').onclick=tog;$('snd2').onclick=tog;$('vb1').onclick=togv;$('vb2').oncli
 const lj=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}},ls=(k,v)=>{try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}},idx=()=>lj('cma_idx',[]),esc=s=>s.replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';'),AV=['🐻','🐰','🐱','🦊','🐼','🦄','🐸','🐯'],er=t=>{$('er').textContent=t};
 const hs=async p=>{try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('cma'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return btoa('cma'+p)}};
 function loadS(d){S={st:[],snd:1,vib:1,coins:0,ach:{},gift:'',...(d||lj(KEY,{}))}}
-function home(){$('pfb').textContent=P?P.av+' '+P.n:'👤 Login / Sign up';bg(0);show('wel')}
+function homeBg(){const hv="<svg xmlns='http://www.w3.org/2000/svg' width='400' height='140' preserveAspectRatio='none' viewBox='0 0 400 140'><path d='M0 70Q70 10 140 60T300 50T400 40V140H0Z' fill='#ff7ec0'/><path d='M0 100Q90 50 200 95T400 80V140H0Z' fill='#c78bff'/></svg>",b=document.body.style;b.background='url("data:image/svg+xml,'+encodeURIComponent(hv)+'") bottom/100% 150px no-repeat,linear-gradient(180deg,#ffd6ec,#d6ecff)';b.backgroundAttachment='fixed'}
+function home(){$('pfb').textContent=P?P.av+' '+P.n:'👤 Login / Sign up';homeBg();show('wel')}
 function enter(u,m,d){P=u;KEY='cma_p_'+(U?U.uid:u.n);loadS(d);sndBtn();home();if(m){$('mb').innerHTML='<div class="big">'+u.av+'</div><h1>'+m+'</h1><div>'+esc(u.n)+'</div><button id="pl">▶ Play now</button>';$('md').classList.add('on');$('pl').onclick=()=>{$('md').classList.remove('on');mapScr()}}}
 const AM=c=>({'auth/email-already-in-use':'That email is already registered','auth/invalid-credential':'Wrong email or password','auth/wrong-password':'Wrong email or password','auth/user-not-found':'Wrong email or password','auth/invalid-email':'Please enter a valid email','auth/weak-password':'Password must be at least 6 characters','auth/too-many-requests':'Too many tries. Please wait a bit.','auth/network-request-failed':'No internet connection'}[c]||'Something went wrong. Try again.');
 const em=n=>n.toLowerCase()+'@candymatch.app',pw=p=>p+'candy';

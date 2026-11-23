@@ -36,14 +36,16 @@ html{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}body{touch
 .bl{display:flex;flex-direction:column;gap:6px;text-align:left;font-size:17px}.bl .lk{opacity:.35;filter:grayscale(1)}#cn,#wn{font-weight:800}
 .card{width:100%;box-sizing:border-box;background:var(--card);border-radius:28px;padding:22px 18px;box-shadow:0 10px 30px #0003;display:flex;flex-direction:column;align-items:center;gap:12px}.lg2{font-size:56px;line-height:1}.sub{margin:0;font-size:14px;opacity:.8}.seg{display:flex;background:var(--cell);border-radius:16px;padding:4px;width:100%;box-sizing:border-box}.seg button{flex:1;background:none;color:var(--ink);box-shadow:none;padding:8px;font-size:17px}.seg button.on{background:var(--acc);color:#fff}.or{opacity:.6;font-size:14px}.fl{width:min(300px,100%);text-align:left;font-size:14px;font-weight:800;display:flex;flex-direction:column;gap:4px}.fl .in{width:100%;box-sizing:border-box;text-align:left}.pw{position:relative}.pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);padding:4px 8px;font-size:16px;box-shadow:none;background:none}
 .c.h{visibility:hidden}.c.j1{background:#ff9bd0cc;box-shadow:inset 0 0 0 3px #ff4fa0}.c.j2{background:#c98bffdd;box-shadow:inset 0 0 0 4px #7a1fd1}
+#lbl{display:flex;flex-direction:column;gap:8px;width:100%}.lr{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:16px;padding:8px 12px;font-size:17px}.lr.me{outline:3px solid var(--acc)}.rk{width:44px;font-weight:800;text-align:center}.nm{flex:1;text-align:left;font-weight:800;overflow:hidden;text-overflow:ellipsis}.c2{background:var(--card);border-radius:18px;padding:10px 16px;font-weight:800;width:100%;box-sizing:border-box}.c2 b{margin-left:8px;font-size:24px}
 @media (prefers-reduced-motion:reduce){.bear,.c.hint{animation:none}}
 </style></head><body><div id="app">
 
 <div id="wel" class="scr on"><div class="logo">🍬</div><h1>Candy Match Adventure</h1><div class="bear">🐻</div>
-<button id="play">▶ Play</button><button class="g" id="pfb">👤 Login / Sign up</button><button class="g" id="gift">🎁 Daily Gift</button><div class="row"><button class="g" id="snd1">🔊 Sound</button><button class="g" id="vb1">📳</button><button class="g" id="bj">🏆</button></div></div>
+<button id="play">▶ Play</button><button class="g" id="pfb">👤 Login / Sign up</button><button class="g" id="lbb">📊 Leaderboard</button><button class="g" id="gift">🎁 Daily Gift</button><div class="row"><button class="g" id="snd1">🔊 Sound</button><button class="g" id="vb1">📳</button><button class="g" id="bj">🏆</button></div></div>
 
 <div id="au" class="scr"><div class="card"><div class="lg2">🍬</div><h1>Candy Match Adventure</h1><p class="sub">Create a profile to save your progress</p><div class="seg"><button id="tl">Login</button><button id="ts">Sign up</button></div><div id="ab" class="fc"></div><div class="or">ya</div><button class="g" id="gs">Play as guest</button><button class="g" id="ba">⬅ Back</button></div></div>
 <div id="pr" class="scr"><div id="pb" class="fc"></div></div>
+<div id="lb" class="scr"><h1>🏆 Leaderboard</h1><div id="lbs" class="fc"></div><div id="lbl"></div><button id="lbr">↻ Refresh</button><button class="g" id="lbk">⬅ Back</button></div>
 <div id="map" class="scr"><h1>Candy World 🗺️</h1><div id="cn"></div><div class="row"><button class="g" id="pv">◀</button><span id="wn"></span><button class="g" id="nxw">▶</button></div><div id="mp"></div><button class="g" id="home">⬅ Back</button></div>
 
 <div id="game" class="scr"><div class="top"><button class="g" id="back">🗺️</button><span id="lv"></span><span>Moves: <b id="mv"></b></span></div>
@@ -58,7 +60,7 @@ html{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}body{touch
 <script type="module">
 import{initializeApp}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+import{getFirestore,doc,getDoc,setDoc,collection,query,orderBy,limit,getDocs}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 const fb=initializeApp({apiKey:"AIzaSyCxOhqQ6I6Ggr-IVpI0mOK552D4744Rr20",authDomain:"candy-match-adventure-79c48.firebaseapp.com",projectId:"candy-match-adventure-79c48",storageBucket:"candy-match-adventure-79c48.firebasestorage.app",messagingSenderId:"1069383336699",appId:"1:1069383336699:web:6c7b1e7e820cf125cfa65e"});
 const auth=getAuth(fb),db=getFirestore(fb);
 const N=7,E=['🍓','🍋','🍇','🍬','🍪','🍩',,,,'🎁'],$=id=>document.getElementById(id),sleep=ms=>new Promise(r=>setTimeout(r,ms));
@@ -162,11 +164,11 @@ function enter(u,m,d){P=u;KEY='cma_p_'+(U?U.uid:u.n);loadS(d);sndBtn();home();if
 const AM=c=>({'auth/email-already-in-use':'That nickname is already taken','auth/invalid-credential':'Wrong nickname or PIN','auth/wrong-password':'Wrong nickname or PIN','auth/user-not-found':'Wrong nickname or PIN','auth/too-many-requests':'Too many tries. Please wait a bit.','auth/network-request-failed':'No internet connection'}[c]||'Something went wrong. Try again.');
 const em=n=>n.toLowerCase()+'@candymatch.app',pw=p=>p+'candy';
 async function pull(u){try{const d=await getDoc(doc(db,'players',u.uid));return d.exists()?d.data():null}catch(e){return null}}
-function cloud(){if(!U||!P)return;clearTimeout(tm);tm=setTimeout(()=>{setDoc(doc(db,'players',U.uid),{n:P.n,av:P.av,data:S,t:Date.now()},{merge:true}).catch(()=>{})},1200)}
+function cloud(){if(!U||!P)return;clearTimeout(tm);tm=setTimeout(()=>{setDoc(doc(db,'players',U.uid),{n:P.n,av:P.av,data:S,t:Date.now()},{merge:true}).catch(()=>{});const stt=S.st.reduce((a,b)=>a+(b||0),0),lv=S.st.filter(x=>x>0).length;setDoc(doc(db,'leaderboard',U.uid),{n:P.n,av:P.av,stars:stt,lv,pts:stt*100+lv,t:Date.now()}).catch(()=>{})},1200)}
 function authScr(m){const b=$('ab');$('tl').classList.toggle('on',m!='s');$('ts').classList.toggle('on',m=='s');
  const pin=(id,l)=>'<label class="fl">'+l+'<div class="pw"><input id="'+id+'" class="in" type="password" inputmode="numeric" maxlength="4" placeholder="••••"><button type="button" data-e="'+id+'">👁</button></div></label>';
- const nk='<label class="fl">Nickname<input id="nm" class="in" maxlength="12" autocapitalize="none" placeholder="e.g. Aryan"></label>';
- b.innerHTML=m=='s'?nk+'<div class="av">'+AV.map(a=>'<button class="g" data-a="'+a+'">'+a+'</button>').join('')+'</div>'+pin('pn','PIN (4 digits)')+pin('p2','Confirm PIN')+'<button id="go">Create account</button><div id="er"></div>':nk+pin('pn','PIN')+'<button id="go">Login</button><div id="er"></div>';
+ const nk='<label class="fl">Nickname<input id="nm" class="in" maxlength="12" autocapitalize="none" placeholder="e.g. SuperStar7"></label>';
+ b.innerHTML=m=='s'?nk+'<small>Your nickname appears on the leaderboard. Please do not use your real name.</small><div class="av">'+AV.map(a=>'<button class="g" data-a="'+a+'">'+a+'</button>').join('')+'</div>'+pin('pn','PIN (4 digits)')+pin('p2','Confirm PIN')+'<button id="go">Create account</button><div id="er"></div>':nk+pin('pn','PIN')+'<button id="go">Login</button><div id="er"></div>';
  let av=AV[0];const hl=()=>b.querySelectorAll('[data-a]').forEach(y=>y.style.outline=y.dataset.a==av?'3px solid var(--acc)':'');
  b.querySelectorAll('[data-a]').forEach(x=>x.onclick=()=>{av=x.dataset.a;hl()});hl();
  b.querySelectorAll('[data-e]').forEach(x=>x.onclick=e=>{e.preventDefault();const i=$(x.dataset.e);i.type=i.type=='password'?'text':'password'});
@@ -185,6 +187,12 @@ $('pfb').onclick=()=>P?profScr():authScr('l');$('tl').onclick=()=>authScr('l');$
 $('gs').onclick=()=>{P=null;KEY='cma';ls('cma_cur',null);loadS();sndBtn();home()};
 $('bd').onpointermove=e=>{if(!st||busy)return;const dx=e.clientX-st.x,dy=e.clientY-st.y;if(Math.abs(dx)>16||Math.abs(dy)>16){const s=st;st=null;const h=Math.abs(dx)>Math.abs(dy);act(s.r,s.c,s.r+(h?0:Math.sign(dy)),s.c+(h?Math.sign(dx):0))}};
 onAuthStateChanged(auth,async u=>{if(au)return;if(u){U=u;const d=await pull(u);enter({n:d?d.n:'Player',av:d?d.av:'🐻'},0,d&&d.data)}else{U=null;home();authScr('l')}});
+async function lbScr(){show('lb');const el=$('lbl');el.textContent='Loading…';
+ try{const q=await getDocs(query(collection(db,'leaderboard'),orderBy('pts','desc'),limit(50))),rows=q.docs.map(d=>({id:d.id,...d.data()})),me=U?rows.findIndex(r=>r.id==U.uid):-1;
+  $('lbs').innerHTML=U?'<div class="c2">🏅 Your rank<b>'+(me>=0?'#'+(me+1):'50+')+'</b></div>':'<div class="c2">Login and play to join the ranking</div>';
+  el.innerHTML=rows.length?rows.slice(0,20).map((r,i)=>'<div class="lr'+(U&&r.id==U.uid?' me':'')+'"><span class="rk">'+(['🥇','🥈','🥉'][i]||'#'+(i+1))+'</span><span>'+esc(String(r.av||'🐻'))+'</span><span class="nm">'+esc(String(r.n||'Player'))+'</span><span>⭐'+(+r.stars||0)+' · Lv '+(+r.lv||0)+'</span></div>').join(''):'<div class="c2">No players yet. Be the first!</div>'}
+ catch(e){el.textContent='Could not load the leaderboard. Check your internet and try again.'}}
+$('lbb').onclick=lbScr;$('lbr').onclick=lbScr;$('lbk').onclick=home;
 $('pv').onclick=()=>{W=Math.max(0,W-1);mapScr()};$('nxw').onclick=()=>{W=Math.min(4,W+1);mapScr()};
 const pop=h=>{$('mb').innerHTML=h+'<button id="ok">OK</button>';$('md').classList.add('on');$('ok').onclick=()=>$('md').classList.remove('on')};
 $('gift').onclick=()=>{const d=new Date().toDateString();if(S.gift==d)pop('<h1>🎁</h1><div>You already claimed today’s gift. Come back tomorrow!</div>');else{S.gift=d;S.coins+=50;sv();snd(700,.3);pop('<h1>🎁 Daily Gift!</h1><div>+50 🪙 coins</div>')}};

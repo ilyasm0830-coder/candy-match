@@ -37,6 +37,7 @@ html{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}body{touch
 .card{width:100%;box-sizing:border-box;background:var(--card);border-radius:28px;padding:22px 18px;box-shadow:0 10px 30px #0003;display:flex;flex-direction:column;align-items:center;gap:12px}.lg2{font-size:56px;line-height:1}.sub{margin:0;font-size:14px;opacity:.8}.seg{display:flex;background:var(--cell);border-radius:16px;padding:4px;width:100%;box-sizing:border-box}.seg button{flex:1;background:none;color:var(--ink);box-shadow:none;padding:8px;font-size:17px}.seg button.on{background:var(--acc);color:#fff}.or{opacity:.6;font-size:14px}.fl{width:min(300px,100%);text-align:left;font-size:14px;font-weight:800;display:flex;flex-direction:column;gap:4px}.fl .in{width:100%;box-sizing:border-box;text-align:left}.pw{position:relative}.pw button{position:absolute;right:6px;top:50%;transform:translateY(-50%);padding:4px 8px;font-size:16px;box-shadow:none;background:none}
 .c.h{visibility:hidden}.c.j1{background:#ff9bd0cc;box-shadow:inset 0 0 0 3px #ff4fa0}.c.j2{background:#c98bffdd;box-shadow:inset 0 0 0 4px #7a1fd1}
 #lbl{display:flex;flex-direction:column;gap:8px;width:100%}.lr{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:16px;padding:8px 12px;font-size:17px}.lr.me{outline:3px solid var(--acc)}.rk{width:44px;font-weight:800;text-align:center}.nm{flex:1;text-align:left;font-weight:800;overflow:hidden;text-overflow:ellipsis}.c2{background:var(--card);border-radius:18px;padding:10px 16px;font-weight:800;width:100%;box-sizing:border-box}.c2 b{margin-left:8px;font-size:24px}
+#mw{height:min(66vh,620px);overflow-y:auto;width:100%;border-radius:24px;position:relative;box-shadow:0 8px 24px #0004;-webkit-overflow-scrolling:touch}#ml{position:relative;height:5000px}.sc{position:absolute;transform:translateX(-50%);opacity:.9;pointer-events:none}.zl{position:absolute;left:10px;background:#0006;color:#fff;font-weight:800;padding:4px 12px;border-radius:14px;font-size:15px}.nd{position:absolute;transform:translateX(-50%);width:56px;height:56px;border-radius:50%;border:3px solid #fff;background:radial-gradient(circle at 30% 25%,#7fd0ff,#2a7fe0);color:#fff;font-size:22px;font-weight:800;padding:0;box-shadow:0 4px 0 #1b4f9c}.nd:active{transform:translateX(-50%) translateY(3px)}.nd:disabled{background:#b9b9c6;box-shadow:0 4px 0 #8a8a99}.nd.cur{animation:pls 1s infinite alternate}@keyframes pls{to{transform:translateX(-50%) scale(1.12)}}.nd small{position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);font-size:14px}.ns{position:absolute;top:-22px;left:50%;transform:translateX(-50%);font-size:13px;white-space:nowrap}.pm{position:absolute;top:-62px;left:50%;transform:translateX(-50%);font-size:34px;animation:bob2 .9s infinite alternate}@keyframes bob2{to{top:-70px}}
 @media (prefers-reduced-motion:reduce){.bear,.c.hint{animation:none}}
 </style></head><body><div id="app">
 
@@ -46,8 +47,7 @@ html{-webkit-tap-highlight-color:transparent;overscroll-behavior:none}body{touch
 <div id="au" class="scr"><div class="card"><div class="lg2">🍬</div><h1>Candy Match Adventure</h1><p class="sub">Create a profile to save your progress</p><div class="seg"><button id="tl">Login</button><button id="ts">Sign up</button></div><div id="ab" class="fc"></div><div class="or">ya</div><button class="g" id="gs">Play as guest</button><button class="g" id="ba">⬅ Back</button></div></div>
 <div id="pr" class="scr"><div id="pb" class="fc"></div></div>
 <div id="lb" class="scr"><h1>🏆 Leaderboard</h1><div id="lbs" class="fc"></div><div id="lbl"></div><button id="lbr">↻ Refresh</button><button class="g" id="lbk">⬅ Back</button></div>
-<div id="map" class="scr"><h1>Candy World 🗺️</h1><div id="cn"></div><div class="row"><button class="g" id="pv">◀</button><span id="wn"></span><button class="g" id="nxw">▶</button></div><div id="mp"></div><button class="g" id="home">⬅ Back</button></div>
-
+<div id="map" class="scr"><h1>Candy World 🗺️</h1><div id="cn"></div><div id="mw"><div id="ml"></div></div><button class="g" id="home">⬅ Back</button></div>
 <div id="game" class="scr"><div class="top"><button class="g" id="back">🗺️</button><span id="lv"></span><span>Moves: <b id="mv"></b></span></div>
 <div class="top"><span>Score: <b id="sc">0</b></span><span id="tm"></span><span id="tg"></span></div>
 <div class="pb"><div id="pf"></div></div>
@@ -82,7 +82,19 @@ function show(id){document.querySelectorAll('.scr').forEach(e=>e.classList.toggl
 function sndBtn(){['snd1','snd2'].forEach(i=>$(i).textContent=(S.snd?'🔊':'🔇')+(i=='snd1'?' Sound':''));['vb1','vb2'].forEach(i=>$(i).textContent=S.vib?'📳':'📴')}
 function tog(){S.snd=S.snd?0:1;sv();sndBtn();snd(600)}
 function togv(){S.vib=S.vib?0:1;sv();sndBtn();if(S.vib&&navigator.vibrate)navigator.vibrate(60)}
-function mapScr(){bg(W*10);$('wn').textContent='World '+(W+1);$('cn').textContent='🪙 '+S.coins;const mp=$('mp');mp.innerHTML='';for(let i=W*10;i<W*10+10;i++){const b=document.createElement('button'),s=S.st[i]||0;b.innerHTML=(i+1)+(i>=40?'🎯':'')+'<small>'+(s?'⭐'.repeat(s):'·')+'</small>';b.disabled=i>0&&!(S.st[i-1]>0);b.onclick=()=>start(i);mp.appendChild(b)}show('map')}
+function mapScr(){bg(0);$('cn').textContent='🪙 '+S.coins;
+ const ZN=['Jungle Garden','Desert Town','Sunny Lake','Fun Park','Snow Peaks'],ZC=[['#a8ea78','#4fb04a'],['#f8e2a0','#e2a95a'],['#9ee6f5','#46b6d9'],['#ffc2e2','#b57bff'],['#f2f9ff','#9ec9ff']],ZE=[['🌴','🌳','🌺','🦜','🌿'],['🏜️','🐪','🌵','🏺','☀️'],['🏖️','🐚','⛵','🐬','🌊'],['🎡','🎢','🎈','🎠','🍭'],['🏔️','⛄','❄️','🌲','🦌']],GI=['🎯','🟣','🍓','🎁','🟣'];
+ const xs=i=>50+Math.sin(i*.85)*28,ys=i=>(49-i)*100+50,R=n=>{const v=Math.sin(n*127.1)*43758.5453;return v-Math.floor(v)};
+ const un=i=>i==0||S.st[i-1]>0;let cur=0;while(cur<49&&S.st[cur]>0)cur++;
+ let h='';
+ for(let z=0;z<5;z++){const t=(4-z)*1000;h+='<div style="position:absolute;left:0;right:0;top:'+t+'px;height:1000px;background:linear-gradient(180deg,'+ZC[z][0]+','+ZC[z][1]+')"></div><div class="zl" style="top:'+(t+10)+'px">'+ZN[z]+'</div>';
+  for(let k=0;k<16;k++){const y=t+25+R(z*50+k)*940,li=Math.min(49,Math.max(0,49-Math.round((y-50)/100))),x=Math.min(90,Math.max(3,xs(li)+(R(z*70+k)<.5?-1:1)*(24+R(k+z)*14)));h+='<span class="sc" style="left:'+x+'%;top:'+y+'px;font-size:'+(26+R(k*3+z)*20|0)+'px">'+ZE[z][k%5]+'</span>'}}
+ let d='';for(let i=0;i<50;i++){const x=xs(i),y=ys(i);if(!i)d+='M'+x+' '+y;else{const px=xs(i-1),py=ys(i-1);d+=' Q'+px+' '+py+' '+(x+px)/2+' '+(y+py)/2}}
+ let rv='';for(let z=0;z<4;z++){const y=(4-z)*1000;rv+='<path d="M0 '+y+' Q25 '+(y-35)+' 50 '+y+' T100 '+y+'" fill="none" stroke="#4cc9ff" stroke-width="16" vector-effect="non-scaling-stroke"/><path d="M0 '+y+' Q25 '+(y-35)+' 50 '+y+' T100 '+y+'" fill="none" stroke="#fff" stroke-width="4" vector-effect="non-scaling-stroke" opacity=".8"/>'}
+ h+='<svg viewBox="0 0 100 5000" preserveAspectRatio="none" style="position:absolute;left:0;top:0;width:100%;height:5000px">'+rv+'<path d="'+d+'" fill="none" stroke="#9b6b3a" stroke-width="22" stroke-linecap="round" vector-effect="non-scaling-stroke"/><path d="'+d+'" fill="none" stroke="#f6e7bd" stroke-width="15" stroke-linecap="round" vector-effect="non-scaling-stroke"/></svg>';
+ for(let i=0;i<50;i++){const s2=S.st[i]||0,ok=un(i);h+='<button class="nd'+(i==cur?' cur':'')+'" data-i="'+i+'" style="left:'+xs(i)+'%;top:'+(ys(i)-28)+'px"'+(ok?'':' disabled')+'>'+(i+1)+'<small>'+(i<2?GI[0]:GI[i%5])+'</small>'+(s2?'<span class="ns">'+'⭐'.repeat(s2)+'</span>':'')+(i==cur?'<span class="pm">'+esc(P?P.av:'🐻')+'</span>':'')+'</button>'}
+ const ml=$('ml');ml.innerHTML=h;ml.querySelectorAll('.nd').forEach(b=>b.onclick=()=>start(+b.dataset.i));
+ show('map');const mw=$('mw');mw.scrollTop=Math.max(0,ys(cur)-mw.clientHeight/2)}
 function best(){const k=Array(10).fill(0);B.flat().forEach(x=>{if(x.t>=0&&x.t<9)k[x.t]++});return k.indexOf(Math.max(...k))}
 function find(pref=[]){const m=new Set,sp=[];
  for(let d=0;d<2;d++){const g=(a,b)=>d?B[b][a]:B[a][b];
@@ -193,7 +205,7 @@ async function lbScr(){show('lb');const el=$('lbl');el.textContent='Loading…';
   el.innerHTML=rows.length?rows.slice(0,20).map((r,i)=>'<div class="lr'+(U&&r.id==U.uid?' me':'')+'"><span class="rk">'+(['🥇','🥈','🥉'][i]||'#'+(i+1))+'</span><span>'+esc(String(r.av||'🐻'))+'</span><span class="nm">'+esc(String(r.n||'Player'))+'</span><span>⭐'+(+r.stars||0)+' · Lv '+(+r.lv||0)+'</span></div>').join(''):'<div class="c2">No players yet. Be the first!</div>'}
  catch(e){el.textContent='Could not load the leaderboard. Check your internet and try again.'}}
 $('lbb').onclick=lbScr;$('lbr').onclick=lbScr;$('lbk').onclick=home;
-$('pv').onclick=()=>{W=Math.max(0,W-1);mapScr()};$('nxw').onclick=()=>{W=Math.min(4,W+1);mapScr()};
+
 const pop=h=>{$('mb').innerHTML=h+'<button id="ok">OK</button>';$('md').classList.add('on');$('ok').onclick=()=>$('md').classList.remove('on')};
 $('gift').onclick=()=>{const d=new Date().toDateString();if(S.gift==d)pop('<h1>🎁</h1><div>You already claimed today’s gift. Come back tomorrow!</div>');else{S.gift=d;S.coins+=50;sv();snd(700,.3);pop('<h1>🎁 Daily Gift!</h1><div>+50 🪙 coins</div>')}};
 $('bj').onclick=()=>pop('<h1>🏆 Badges</h1><div class="bl">'+Object.entries(AC).map(([k,v])=>'<div class="'+(S.ach[k]?'':'lk')+'">'+v[0]+' '+v[1]+'</div>').join('')+'</div>');

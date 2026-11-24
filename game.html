@@ -236,7 +236,7 @@ function end(){clearInterval(tt);const win=met(),r=mv/TM,s=win?(r>.4?3:r>.2?2:1)
  b('nx',()=>intro(L+1));b('rt',()=>start(L));b('mp2',mapScr)}
 $('play').onclick=mapScr;$('home').onclick=home;$('back').onclick=()=>{clearHint();clearInterval(tt);mapScr()};
 $('ham').onclick=()=>{if(busy)return;if(ham<1){if(S.coins>=30){S.coins-=30;ham++;sv();upd();say('Hammer bought! 🪙 -30')}else say('You need 30 🪙 for a hammer');return}hamOn=!hamOn;say(hamOn?'Tap any candy 🔨':'Hammer cancelled')};
-$('snd1').onclick=tog;$('snd2').onclick=tog;$('vb1').onclick=togv;$('vb2').onclick=togv;sndBtn();bg(0);
+$('snd1').onclick=tog;$('snd2').onclick=tog;$('vb1').onclick=togv;$('vb2').onclick=togv;sndBtn();
 const lj=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}},ls=(k,v)=>{try{v===null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}},idx=()=>lj('cma_idx',[]),esc=s=>s.replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';'),AV=['🐻','🐰','🐱','🦊','🐼','🦄','🐸','🐯'],er=t=>{$('er').textContent=t};
 const hs=async p=>{try{const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('cma'+p));return[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}catch(e){return btoa('cma'+p)}};
 function loadS(d){S={st:[],snd:1,vib:1,coins:0,ach:{},gift:'',...(d||lj(KEY,{}))};S.lives=S.lives??5;S.hs=S.hs||0;S.rbx=S.rbx||0;S.hmx=S.hmx||0;S.sp=S.sp||0;S.lt=S.lt||0}

@@ -18,7 +18,7 @@ service cloud.firestore {
         && request.resource.data.stars is int && request.resource.data.stars >= 0 && request.resource.data.stars <= 150
         && request.resource.data.lv is int && request.resource.data.lv >= 0 && request.resource.data.lv <= 50
         && request.resource.data.pts is int
-        && (!('fr' in request.resource.data) || (request.resource.data.fr is int && request.resource.data.fr >= 0 && request.resource.data.fr <= 9));
+        && (!('fr' in request.resource.data) || (request.resource.data.fr is int && request.resource.data.fr >= 0 && request.resource.data.fr <= 24));
     }
   }
 }

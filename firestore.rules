@@ -1,24 +1,60 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function notGuest() {
+      return signedIn() && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    // Validates the game save (coins, lives, boosters, etc.). Unknown extra keys are allowed
+    // so that normal saving can never be blocked by a missing field name.
+    function okData(d) {
+      return (!('coins' in d) || (d.coins is int && d.coins >= 0 && d.coins <= 1000000))
+        && (!('lives' in d) || (d.lives is int && d.lives >= 0 && d.lives <= 5))
+        && (!('hs'    in d) || (d.hs    is int && d.hs    >= 0 && d.hs    <= 1000000))
+        && (!('rbx'   in d) || (d.rbx   is int && d.rbx   >= 0 && d.rbx   <= 999))
+        && (!('hmx'   in d) || (d.hmx   is int && d.hmx   >= 0 && d.hmx   <= 999))
+        && (!('fr'    in d) || (d.fr    is int && d.fr    >= 0 && d.fr    <= 24))
+        && (!('st'    in d) || (d.st is list && d.st.size() <= 50))
+        && (!('ph'    in d) || (d.ph is string && d.ph.size() <= 30000));
+    }
+    function okPlayer(p) {
+      return p.keys().hasOnly(['n', 'av', 'data', 't'])
+        && p.n is string && p.n.size() >= 3 && p.n.size() <= 14
+        && p.av is string && p.av.size() <= 8
+        && p.data is map && okData(p.data);
+    }
+    // Coins may not jump by more than 20,000 in a single save.
+    function coinJumpOk(oldD, newD) {
+      return newD.data.get('coins', 0) - oldD.data.get('coins', 0) <= 20000;
+    }
+
+    // Each player can only read and write their own save.
     match /players/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      allow read:   if isOwner(uid);
+      allow create: if isOwner(uid) && okPlayer(request.resource.data);
+      allow update: if isOwner(uid) && okPlayer(request.resource.data)
+                       && coinJumpOk(resource.data, request.resource.data);
+      allow delete: if isOwner(uid);
     }
-    match /usernames/{name} {
-      allow read: if true;
-      allow create: if request.auth != null
-        && request.resource.data.keys().hasOnly(['uid'])
-        && request.resource.data.uid == request.auth.uid;
-    }
+
+    // Public leaderboard: anyone can read, only a signed-in (non-guest) player can write their own row.
     match /leaderboard/{uid} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['n','av','stars','lv','pts','t','fr'])
-        && request.resource.data.n is string && request.resource.data.n.size() <= 12
+      allow create, update: if notGuest() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['n', 'av', 'stars', 'lv', 'pts', 't', 'fr'])
+        && request.resource.data.n is string && request.resource.data.n.size() >= 3 && request.resource.data.n.size() <= 14
+        && request.resource.data.av is string && request.resource.data.av.size() <= 8
         && request.resource.data.stars is int && request.resource.data.stars >= 0 && request.resource.data.stars <= 150
         && request.resource.data.lv is int && request.resource.data.lv >= 0 && request.resource.data.lv <= 50
         && request.resource.data.pts is int
+        && request.resource.data.pts == request.resource.data.stars * 100 + request.resource.data.lv
         && (!('fr' in request.resource.data) || (request.resource.data.fr is int && request.resource.data.fr >= 0 && request.resource.data.fr <= 24));
+      allow delete: if isOwner(uid);
     }
+
+    // Everything else is denied by default.
   }
 }

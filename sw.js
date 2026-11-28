@@ -1,5 +1,5 @@
 // CandyMatch Adventure offline support (v4)
-const V='cma-v4',CORE=['./','game.html','index.html','privacy.html','manifest.webmanifest','icon-192.png','icon-512.png','bear.webp','kingdom.jpg'];
+const V='cma-v5',CORE=['./','game.html','index.html','privacy.html','manifest.webmanifest','icon-192.png','icon-512.png','maskable-512.png','apple-touch-icon.png','bear.webp','kingdom.jpg'];
 const clean=async r=>{if(!r.redirected)return r;const b=await r.blob();return new Response(b,{status:r.status,statusText:r.statusText,headers:r.headers})};
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(V).then(c=>Promise.allSettled(CORE.map(async u=>{const r=await fetch(u,{cache:'reload'});if(r.ok)await c.put(u,await clean(r))}))))});
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==V).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
